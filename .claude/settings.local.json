@@ -10,7 +10,9 @@
       "Bash(pixi run:*)",
       "Bash(git init:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git log:*)",
+      "Bash(MCP_TRANSPORT=streamable_http MCP_HOST=0.0.0.0 MCP_PORT=8080 PYTHONPATH=src pixi run python:*)"
     ],
     "deny": [],
     "ask": []

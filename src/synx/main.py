@@ -1,14 +1,15 @@
 """Main CLI application for Synx - Synapse Executor."""
 
+import os
+
 import typer
 from dotenv import load_dotenv
 from rich.console import Console
 from rich.panel import Panel
 
 from synx import __version__
-from synx.config import LogLevel, load_config
+from synx.config import LogLevel, MCPTransport, load_config
 from synx.logger import LogConfig, get_logger
-from synx.mcp_server import run_server
 
 # Load environment variables
 load_dotenv()
@@ -49,15 +50,23 @@ def start(
 
     setup_logger(LogConfig(level=config.log_level))
 
-    # Display welcome message
+    # Import mcp_server after environment is configured
+    from synx.mcp_server import run_server
+
+    transport_info = (
+        f"{config.mcp_host}:{config.mcp_port}"
+        if config.mcp_transport.value == MCPTransport.STREAMABLE_HTTP.value
+        else "stdio"
+    )
     console.print(
         Panel(
-            "[bold green]Starting Synx MCP Server[/bold green]\n"
-            "[dim]Listening for MCP client connections...[/dim]",
+            f"[bold green]Starting Synx MCP Server[/bold green]\n"
+            f"[dim]Transport: {config.mcp_transport.value}[/dim]\n"
+            f"[dim]Listening on: {transport_info}[/dim]",
             border_style="green",
         )
     )
-    run_server()
+    run_server(transport=config.mcp_transport)
 
 
 @app.command()

@@ -2,10 +2,10 @@
 
 import io
 import json
-import numpy as np
 from contextlib import redirect_stderr, redirect_stdout
 from typing import Any
 
+import numpy as np
 from mcp.server.fastmcp import Context
 from pydantic import BaseModel, Field
 
@@ -97,7 +97,12 @@ class PythonExecutor:
             except Exception as e:
                 error_output = stderr_capture.getvalue()
                 if error_output:
-                    await ctx.log("error", f"Error executing code (stderr): {error_output.strip()}")
-                    raise Exception(f"Error executing code: {error_output.strip()}") from e
+                    await ctx.log(
+                        "error",
+                        f"Error executing code (stderr): {error_output.strip()}",
+                    )
+                    raise Exception(
+                        f"Error executing code: {error_output.strip()}"
+                    ) from e
                 await ctx.log("error", f"Error executing code (exception): {e}")
                 raise Exception(f"Error executing code: {e}") from e

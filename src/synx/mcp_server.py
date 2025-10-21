@@ -1,13 +1,20 @@
 """MCP Server for Synx - Synapse Executor."""
 
+import os
+
 from mcp.server.fastmcp import Context, FastMCP
 
 from synx.code_executor import PythonExecutor
+from synx.config import MCPTransport
 from synx.logger import get_logger
 
 logger = get_logger()
 
-mcp = FastMCP("synx")
+# Load host/port from environment at module level
+_mcp_host = os.getenv("HOST", "localhost")
+_mcp_port = int(os.getenv("PORT", "10000"))
+
+mcp = FastMCP("synx", host=_mcp_host, port=_mcp_port)
 
 executor = PythonExecutor()
 
@@ -32,9 +39,22 @@ async def run_code(ctx: Context, code: str, session_id: str | None = None) -> st
     return res
 
 
-def run_server():
-    logger.info("Starting Synx MCP Server")
-    mcp.run()
+def run_server(transport: MCPTransport = MCPTransport.STDIO):
+    """Start the MCP server with specified transport configuration.
+
+    Args:
+        transport: Transport type ("stdio" or "streamable_http")
+        host: Host address for streamable_http transport (for logging only)
+        port: Port number for streamable_http transport (for logging only)
+    """
+    logger.info(f"Starting Synx MCP Server (transport={transport})")
+
+    if transport == MCPTransport.STREAMABLE_HTTP.value:
+        logger.info(f"Server listening on {_mcp_host}:{_mcp_port}")
+        mcp.run(transport="streamable-http")
+    else:
+        logger.info("Server listening on stdio")
+        mcp.run(transport="stdio")
 
 
 if __name__ == "__main__":
