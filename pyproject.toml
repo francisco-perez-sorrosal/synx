@@ -43,6 +43,15 @@ lint = "ruff check src/ tests/"
 format = "black src/ tests/"
 type-check = "mypy src/"
 
+[tool.pixi.dependencies]
+pip = ">=25.2,<26"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/synx"]
+
 [tool.pixi.environments]
 default = { solve-group = "default" }
 dev = { features = ["dev"], solve-group = "default" }

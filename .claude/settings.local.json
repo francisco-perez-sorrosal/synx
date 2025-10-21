@@ -12,7 +12,11 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git log:*)",
-      "Bash(MCP_TRANSPORT=streamable_http MCP_HOST=0.0.0.0 MCP_PORT=8080 PYTHONPATH=src pixi run python:*)"
+      "Bash(MCP_TRANSPORT=streamable_http MCP_HOST=0.0.0.0 MCP_PORT=8080 PYTHONPATH=src pixi run python:*)",
+      "Bash(gh --version:*)",
+      "Bash(gh auth:*)",
+      "Bash(gh repo create:*)",
+      "Bash(gh repo view:*)"
     ],
     "deny": [],
     "ask": []
