@@ -1,0 +1,108 @@
+[project]
+name = "synx"
+version = "0.0.1"
+description = "Synapse Executor - Isolated environment to run Python code"
+authors = [
+    {name = "Francisco Perez-Sorrosal", email = "fperezsorrosal@gmail.com"}
+]
+requires-python = ">= 3.11"
+dependencies = [
+    "loguru>=0.7.0",
+    "typer>=0.9.0",
+    "rich>=13.0.0",
+    "python-dotenv>=1.0.0",
+    "pydantic>=2.0.0", 
+    "mcp[cli]>=1.18.0,<2", 
+    "numpy>=2.3.4,<3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "black>=23.0.0",
+    "ruff>=0.0.280",
+    "mypy>=1.5.0",
+    "python-semantic-release>=8.0.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["osx-arm64"]
+
+[tool.pixi.tasks]
+start = { cmd = "python -m synx start", env = { PYTHONPATH = "src" } }
+mcp = { cmd = "python -m synx start", env = { PYTHONPATH = "src" } }
+mcps = { cmd = "python -m synx start", env = { PYTHONPATH = "src" } }
+server = { cmd = "python -m synx start", env = { PYTHONPATH = "src" } }
+test = "pytest tests/"
+lint = "ruff check src/ tests/"
+format = "black src/ tests/"
+type-check = "mypy src/"
+
+[tool.pixi.environments]
+default = { solve-group = "default" }
+dev = { features = ["dev"], solve-group = "default" }
+
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false  # Relaxed for POC
+disallow_incomplete_defs = false  # Relaxed for POC
+check_untyped_defs = true
+disallow_untyped_decorators = false  # Relaxed for POC
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+pythonpath = ["src"]
+
+[tool.semantic_release]
+version_toml = ["pyproject.toml:project.version"]
+build_command = "pip install build && python -m build"
+upload_to_vcs_release = true
+upload_to_pypi = false
+upload_to_release = false
+commit_author = "Francisco Perez-Sorrosal <fperezsorrosal@gmail.com>"
+commit_message = "chore: release v{version}"
+tag_commit = true
+major_on_zero = true

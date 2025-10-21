@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pixi run pytest:*)",
+      "Bash(pixi run test:*)",
+      "Bash(pixi list:*)",
+      "Bash(pixi run python:*)",
+      "Bash(PYTHONPATH=src pixi run python:*)",
+      "Bash(pixi run lint:*)",
+      "Bash(pixi run:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
