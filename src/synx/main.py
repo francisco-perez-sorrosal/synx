@@ -77,5 +77,13 @@ def version() -> None:
     console.print("Email: fperezsorrosal@gmail.com")
 
 
+@app.command()
+def main() -> None:
+    arg_defaults = start.__defaults__
+    first_arg = arg_defaults[0].default
+    second_arg = arg_defaults[1].default
+    print(first_arg, second_arg)
+    start(first_arg, second_arg)
+
 if __name__ == "__main__":
-    app()
+    main()
