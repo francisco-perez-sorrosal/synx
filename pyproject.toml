@@ -14,7 +14,7 @@ dependencies = [
     "pydantic>=2.0.0",
     "mcp[cli]>=1.18.0,<2",
     "numpy",
-    "scikit-learn",
+    "matplotlib",
 ]
 
 [project.optional-dependencies]
