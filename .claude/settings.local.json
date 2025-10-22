@@ -16,7 +16,10 @@
       "Bash(gh --version:*)",
       "Bash(gh auth:*)",
       "Bash(gh repo create:*)",
-      "Bash(gh repo view:*)"
+      "Bash(gh repo view:*)",
+      "Bash(pixi add:*)",
+      "Bash(pixi install:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []

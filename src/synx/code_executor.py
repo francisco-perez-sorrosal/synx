@@ -67,6 +67,9 @@ class PythonExecutor:
             stdout_capture = io.StringIO()
             stderr_capture = io.StringIO()
 
+            # Initialize new_variables for error handling
+            new_variables: dict[str, Any] = {}
+
             try:
                 # Execute the code
                 with redirect_stdout(stdout_capture), redirect_stderr(stderr_capture):
@@ -78,7 +81,6 @@ class PythonExecutor:
                 )
 
                 # Capture any variables that were created/modified
-                new_variables = {}
                 for key, value in exec_locals.items():
                     if not key.startswith("__"):
                         try:
@@ -96,18 +98,12 @@ class PythonExecutor:
                 )
             except Exception as e:
                 error_output = stderr_capture.getvalue()
-                if error_output:
-                    await ctx.log(
-                        "error",
-                        f"Error executing code (stderr): {error_output.strip()}",
-                    )
-                    raise Exception(
-                        f"Error executing code: {error_output.strip()}"
-                    ) from e
-                await ctx.log("error", f"Error executing code (exception): {e}")
+                error_message = error_output.strip() if error_output else str(e)
+                await ctx.log("error", f"Error executing code: {error_message}")
+
                 return ExecutionState(
                     stdout=stdout_capture.getvalue(),
-                    stderr=f"Error executing code: {e}\n\n{stderr_capture.getvalue()}",
+                    stderr=f"Error: {error_message}",
                     variables=new_variables,
                     session=session,
                 )

@@ -79,6 +79,7 @@ def version() -> None:
 
 @app.command()
 def main() -> None:
+    # Trick to get the default values of the start command. Do not remove this!
     arg_defaults = start.__defaults__
     first_arg = arg_defaults[0].default
     second_arg = arg_defaults[1].default
