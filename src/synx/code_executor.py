@@ -105,4 +105,9 @@ class PythonExecutor:
                         f"Error executing code: {error_output.strip()}"
                     ) from e
                 await ctx.log("error", f"Error executing code (exception): {e}")
-                raise Exception(f"Error executing code: {e}") from e
+                return ExecutionState(
+                    stdout=stdout_capture.getvalue(),
+                    stderr=f"Error executing code: {e}\n\n{stderr_capture.getvalue()}",
+                    variables=new_variables,
+                    session=session,
+                )
