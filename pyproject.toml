@@ -14,7 +14,6 @@ dependencies = [
     "pydantic>=2.0.0",
     "mcp[cli]>=1.18.0,<2",
     "numpy",
-    "scikit-learn",
 ]
 
 [project.optional-dependencies]
@@ -56,6 +55,9 @@ packages = ["src/synx"]
 [tool.pixi.environments]
 default = { solve-group = "default" }
 dev = { features = ["dev"], solve-group = "default" }
+
+[tool.pixi.pypi-dependencies]
+scikit-learn = "*"
 
 [tool.ruff]
 target-version = "py311"
