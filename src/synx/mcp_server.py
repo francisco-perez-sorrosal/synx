@@ -14,12 +14,12 @@ logger = get_logger()
 _mcp_host = os.getenv("HOST", "0.0.0.0")
 _mcp_port = int(os.getenv("PORT", "10000"))
 
+logger.info(f"MCP host: {_mcp_host}, MCP port: {_mcp_port}")
 # Configure FastMCP with proper settings for streamable HTTP
 mcp = FastMCP(
     "synx",
     host=_mcp_host,
-    port=_mcp_port,
-    streamable_http_path="/mcp",
+    port=_mcp_port
 )
 
 executor = PythonExecutor()
@@ -55,12 +55,11 @@ def run_server(transport: MCPTransport = MCPTransport.STDIO):
     """
     logger.info(f"Starting Synx MCP Server (transport={transport})")
 
-    if transport == MCPTransport.STREAMABLE_HTTP.value:
+    if transport == MCPTransport.STREAMABLE_HTTP:
         logger.info(f"Server listening on {_mcp_host}:{_mcp_port}")
-        mcp.run(transport="streamable-http")
     else:
         logger.info("Server listening on stdio")
-        mcp.run(transport="stdio")
+    mcp.run(transport=transport.value)
 
 
 if __name__ == "__main__":

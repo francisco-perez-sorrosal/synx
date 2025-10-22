@@ -8,7 +8,8 @@ from rich.panel import Panel
 
 from synx import __version__
 from synx.config import LogLevel, MCPTransport, load_config
-from synx.logger import LogConfig, get_logger
+from synx.logger import LogConfig, get_logger, setup_logger
+from synx.mcp_server import run_server
 
 # Load environment variables
 load_dotenv()
@@ -44,13 +45,8 @@ def start(
     if log_level.upper() in [level.value for level in LogLevel]:
         config.log_level = LogLevel(log_level.upper())
 
-    # Configure logger with new settings
-    from synx.logger import setup_logger
 
     setup_logger(LogConfig(level=config.log_level))
-
-    # Import mcp_server after environment is configured
-    from synx.mcp_server import run_server
 
     transport_info = (
         f"{config.mcp_host}:{config.mcp_port}"
