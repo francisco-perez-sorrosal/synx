@@ -81,7 +81,7 @@ def main() -> None:
     # Trick to get the default values of the start command. Do not remove this!
     arg_defaults = start.__defaults__
     if arg_defaults:
-        console.print(f"Running start with default values. arg_defaults: {arg_defaults} ")
+        console.print(f"Running start with default values. arg_defaults: {arg_defaults[0].default} {arg_defaults[1].default} ")
         first_arg = arg_defaults[0].default
         second_arg = arg_defaults[1].default
         print(first_arg, second_arg)
