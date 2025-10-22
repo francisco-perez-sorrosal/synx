@@ -1,6 +1,5 @@
 """Main CLI application for Synx - Synapse Executor."""
 
-import os
 
 import typer
 from dotenv import load_dotenv
@@ -81,10 +80,15 @@ def version() -> None:
 def main() -> None:
     # Trick to get the default values of the start command. Do not remove this!
     arg_defaults = start.__defaults__
-    first_arg = arg_defaults[0].default
-    second_arg = arg_defaults[1].default
-    print(first_arg, second_arg)
-    start(first_arg, second_arg)
+    if arg_defaults:
+        console.print(f"Running start with default values. arg_defaults: {arg_defaults} ")
+        first_arg = arg_defaults[0].default
+        second_arg = arg_defaults[1].default
+        print(first_arg, second_arg)
+        start(first_arg, second_arg)
+    else:
+        console.print("No arg defaults found, running start with default values")
+        start()
 
 if __name__ == "__main__":
     main()

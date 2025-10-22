@@ -11,10 +11,16 @@ from synx.logger import get_logger
 logger = get_logger()
 
 # Load host/port from environment at module level
-_mcp_host = os.getenv("HOST", "localhost")
+_mcp_host = os.getenv("HOST", "0.0.0.0")
 _mcp_port = int(os.getenv("PORT", "10000"))
 
-mcp = FastMCP("synx", host=_mcp_host, port=_mcp_port)
+# Configure FastMCP with proper settings for streamable HTTP
+mcp = FastMCP(
+    "synx",
+    host=_mcp_host,
+    port=_mcp_port,
+    streamable_http_path="/mcp",
+)
 
 executor = PythonExecutor()
 
