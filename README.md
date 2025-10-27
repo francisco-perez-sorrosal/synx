@@ -158,6 +158,62 @@ pixi add --feature dev package-name
 pixi add --pypi package-name
 ```
 
+### MCP Client Access with OAUTH
+
+
+#### Locally
+
+Lauch Authentic server:
+
+```sh
+pixi run start --debug 
+```
+This will make the Uvicorn-based auth server run on 'http://localhost:9000'
+
+Lauch MCP server:
+```sh
+TRANSPORT=streamable-http AUTH_URL=http://localhost:9000 pixi run start --debug --use-auth 
+```
+
+Lauch MCP inspector with:
+```shell
+DANGEROUSLY_OMIT_AUTH=false npx @modelcontextprotocol/inspector
+```
+
+Locally, setup SREAMABLE_HTTP as protocol:
+```sh
+http://localhost:10000/mcp
+```
+
+#### Remotely
+
+Authentic server must be runining in Wasmer with the following env variables:
+
+```sh
+AUTH_SERVER=authentic.wasmer.app
+AUTH_PORT=443
+```
+
+Configure Styx in Wasmer with:
+```sh
+TRANSPORT=streamable-http
+PORT=10000
+USE_AUTH=True
+AUTH_SERVER_URL=https://authentic.wasmer.app
+```
+
+Lauch MCP inspector with:
+```shell
+DANGEROUSLY_OMIT_AUTH=false npx @modelcontextprotocol/inspector
+```
+
+Locally, setup SREAMABLE_HTTP as protocol:
+```sh
+http://synx.wasmer.app:10000/mcp
+```
+
+
+
 ## Contributing
 
 1. Fork the repository
