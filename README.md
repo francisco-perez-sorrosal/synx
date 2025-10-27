@@ -200,6 +200,7 @@ TRANSPORT=streamable-http
 PORT=10000
 USE_AUTH=True
 AUTH_SERVER_URL=https://authentic.wasmer.app
+RESOURCE_SERVER_URL=https://synx-francisco-perez-sorrosal.wasmer.app
 ```
 
 Lauch MCP inspector with:
@@ -209,7 +210,7 @@ DANGEROUSLY_OMIT_AUTH=false npx @modelcontextprotocol/inspector
 
 Locally, setup SREAMABLE_HTTP as protocol:
 ```sh
-http://synx.wasmer.app:10000/mcp
+http://synx-francisco-perez-sorrosal.wasmer.app/mcp
 ```
 
 

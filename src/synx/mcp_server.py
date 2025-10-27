@@ -20,14 +20,14 @@ def create_mcp_server(host: str, port: int, auth_config: AuthConfig | None) -> F
     # Load host/port from environment at module level
     mcp_host = os.getenv("HOST", host)
     mcp_port = int(os.getenv("PORT", port))
-    this_mcp_server_url: AnyHttpUrl = AnyHttpUrl(f"http://{mcp_host}:{mcp_port}")
+    this_mcp_server_url: AnyHttpUrl = AnyHttpUrl(f"{auth_config.resource_server_url}")
     
     # Auth configuration
     auth_settings = None
     token_verifier = None
     if auth_config is not None:
         auth_settings = AuthSettings(
-            issuer_url=auth_config.auth_server_url,
+            issuer_url=this_mcp_server_url,
             required_scopes=[auth_config.mcp_scope],
             resource_server_url=this_mcp_server_url,
         )
@@ -42,7 +42,7 @@ def create_mcp_server(host: str, port: int, auth_config: AuthConfig | None) -> F
     else:
         logger.warning("No auth used!")
 
-    logger.info(f"MCP host: {this_mcp_server_url}")
+    logger.info(f"MCP host/port: {mcp_host}/{mcp_port}")
     # Configure FastMCP with proper settings for streamable HTTP
     return FastMCP(
         "synx",
