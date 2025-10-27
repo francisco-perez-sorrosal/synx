@@ -57,7 +57,6 @@ def start(
     else:
         auth_config = None
     logger.info(f"Auth config: {auth_config}")
-    setup_logger(LogConfig(level=config.log_level))
 
     transport_info = (
         f"{config.mcp_host}:{config.mcp_port}"
