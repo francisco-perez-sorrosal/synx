@@ -69,6 +69,7 @@ class SimpleTokenVerifier(TokenVerifier):
                     #     logger.warning(f"Token resource validation failed. Expected: {self.resource_url}")
                     #    return None
 
+                logger.warning(f"Token verification data: {data}")
                 token_info = AccessToken(
                     token=token,
                     client_id=data.get("client_id", "unknown"),

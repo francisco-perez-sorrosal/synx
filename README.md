@@ -180,7 +180,7 @@ Lauch MCP inspector with:
 DANGEROUSLY_OMIT_AUTH=false npx @modelcontextprotocol/inspector
 ```
 
-Locally, setup SREAMABLE_HTTP as protocol:
+...setup SREAMABLE_HTTP as protocol and then connect to:
 ```sh
 http://localhost:10000/mcp
 ```
@@ -194,7 +194,7 @@ AUTH_SERVER=authentic.wasmer.app
 AUTH_PORT=443
 ```
 
-Configure Styx in Wasmer with:
+Configure Styx in Wasmer with (see the `.auth.env` file for double-check this values):
 ```sh
 TRANSPORT=streamable-http
 PORT=10000
@@ -205,14 +205,13 @@ RESOURCE_SERVER_URL=https://synx-francisco-perez-sorrosal.wasmer.app
 
 Lauch MCP inspector with:
 ```shell
-npx @modelcontextprotocol/inspector
+npx @modelcontextprotocol/inspector  # Without setting DANGEROUSLY_OMIT_AUTH env var
 ```
 
-Locally, setup SREAMABLE_HTTP as protocol:
+...setup SREAMABLE_HTTP as protocol and then connect to:
 ```sh
-http://synx-francisco-perez-sorrosal.wasmer.app/mcp
+https://synx-francisco-perez-sorrosal.wasmer.app/mcp
 ```
-
 
 
 ## Contributing
