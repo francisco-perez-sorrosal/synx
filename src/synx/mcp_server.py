@@ -6,6 +6,7 @@ import os
 from mcp.server.fastmcp import Context, FastMCP
 from mcp.server.auth.settings import AuthSettings
 from pydantic import AnyHttpUrl
+from starlette.responses import JSONResponse
 
 from synx.auth.token_verifier import SimpleTokenVerifier
 from synx.auth_config import AuthConfig
@@ -51,14 +52,28 @@ class FixFastMCP(FastMCP):
             authorization_servers=[self.settings.auth.issuer_url],
             scopes_supported=self.settings.auth.required_scopes,
         )
+        
+        async def custom_well_known_endpoint(request):
+            """
+            Custom .well-known/oauth-protected-resource endpoint that correctly advertises the SSE endpoint
+            as the protected resource while serving the .well-known endpoint at the root.
+            """
+            scopes_supported = []
+            for required_scope in self.settings.auth.required_scopes:
+                scopes_supported.append(str(required_scope))
+            
+            return JSONResponse({
+                "resource": f"{self.settings.auth.resource_server_url}/mcp",
+                "authorization_servers": [f"{self.settings.auth.issuer_url}"],
+                "scopes_supported": scopes_supported,
+                "bearer_methods_supported": ["header"]
+            })
+        
         logger.warning(f"Adding new Protected Resource Metadata endpoint: {protected_resource_metadata}")
         starlette_app.router.routes.append(
             Route(
                 "/.well-known/oauth-protected-resource",
-                endpoint=cors_middleware(
-                    ProtectedResourceMetadataHandler(protected_resource_metadata).handle,
-                    ["GET", "OPTIONS"],
-                ),
+                endpoint=custom_well_known_endpoint,
                 methods=["GET", "OPTIONS"],
             )
         )
