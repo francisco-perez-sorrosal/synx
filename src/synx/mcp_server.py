@@ -32,8 +32,12 @@ class FixFastMCP(FastMCP):
             log_level=self.settings.log_level.lower(),
         )
         
+        
+        logger.warning(f"type of starlette_app.router.routes: {type(starlette_app.router.routes)}")
+        logger.warning(f"type of starlette_app.router.routes[0]: {type(starlette_app.router.routes[0])}"
+        logger.warning(f"type of starlette_app.router.routes[0].endpoint: {type(starlette_app.router.routes[0].endpoint)}")
         for route in starlette_app.router.routes:
-            logger.warning(f"Route before removal: {route.path}\n\t{route.endpoint}")
+            logger.warning(f"Route before removal: {route.path}\n\t{str(route.endpoint)}")
         
 
         # Remove existing Protected Resource Metadata endpoint (resource="http://localhost:8000/")
@@ -51,28 +55,13 @@ class FixFastMCP(FastMCP):
             authorization_servers=[self.settings.auth.issuer_url],
             scopes_supported=self.settings.auth.required_scopes,
         )
+    
         
-        async def custom_well_known_endpoint(request):
-            """
-            Custom .well-known/oauth-protected-resource endpoint that correctly advertises the SSE endpoint
-            as the protected resource while serving the .well-known endpoint at the root.
-            """
-            scopes_supported = []
-            for required_scope in self.settings.auth.required_scopes:
-                scopes_supported.append(str(required_scope))
-            
-            return JSONResponse({
-                "resource": f"{self.settings.auth.resource_server_url}/mcp",
-                "authorization_servers": [f"{self.settings.auth.issuer_url}"],
-                "scopes_supported": scopes_supported,
-                "bearer_methods_supported": ["header"]
-            })
-        
-        logger.warning(f"Adding new Protected Resource Metadata JSON endpoint: {custom_well_known_endpoint}")
-        starlette_app.router.routes.append(Route("/.well-known/oauth-protected-resource", endpoint=custom_well_known_endpoint, methods=["GET", "OPTIONS"]))
+        logger.warning(f"Adding new Protected Resource Metadata JSON endpoint: {protected_resource_metadata}")
+        starlette_app.router.routes.append(Route("/.well-known/oauth-protected-resource", endpoint=protected_resource_metadata.handle, methods=["GET", "OPTIONS"]))
 
         for route in starlette_app.router.routes:
-            logger.warning(f"Route after addition: {route.path}\n\t{route.endpoint}")
+            logger.warning(f"Route after addition: {route.path}\n\t{str(route.endpoint)}")
 
 
         # Now run server
