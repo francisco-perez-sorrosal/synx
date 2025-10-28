@@ -31,6 +31,7 @@ class FixFastMCP(FastMCP):
             port=self.settings.port,
             log_level=self.settings.log_level.lower(),
         )
+        logger.warning(f"Previous Protected Resource Metadata endpoint: {starlette_app.router.routes}")
 
         # Remove existing Protected Resource Metadata endpoint (resource="http://localhost:8000/")
         logger.warning(f"Removing existing Protected Resource Metadata endpoint: {starlette_app.router.routes}")
