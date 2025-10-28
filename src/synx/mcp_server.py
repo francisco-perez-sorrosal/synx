@@ -50,6 +50,10 @@ class FixFastMCP(FastMCP):
         from mcp.shared.auth import ProtectedResourceMetadata
         from starlette.routing import Route
 
+
+        logger.warning(f"resource_server_url: {self.settings.auth.resource_server_url}")
+        logger.warning(f"issuer_url: {self.settings.auth.issuer_url}")
+        logger.warning(f"required_scopes: {self.settings.auth.required_scopes}")
         protected_resource_metadata = ProtectedResourceMetadata(
             resource=AnyHttpUrl(str(self.settings.auth.resource_server_url)+"mcp"), # Real fix
             authorization_servers=[self.settings.auth.issuer_url],
@@ -96,7 +100,7 @@ def create_mcp_server(host: str, port: int, auth_config: AuthConfig | None) -> F
 
     logger.info(f"MCP host/port: {mcp_host}/{mcp_port}")
     # Configure FastMCP with proper settings for streamable HTTP
-    return FastMCP(
+    return FixFastMCP(
         "synx",
         host=mcp_host,
         port=mcp_port,
