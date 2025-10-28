@@ -33,7 +33,7 @@ class FixFastMCP(FastMCP):
         )
         
         for route in starlette_app.router.routes:
-            logger.warning(f"Route before removal: {route.path}")
+            logger.warning(f"Route before removal: {route.path}\n\t{route.endpoint}")
         
 
         # Remove existing Protected Resource Metadata endpoint (resource="http://localhost:8000/")
@@ -64,7 +64,7 @@ class FixFastMCP(FastMCP):
         )
 
         for route in starlette_app.router.routes:
-            logger.warning(f"Route after addition: {route.path}")
+            logger.warning(f"Route after addition: {route.path}\n\t{route.endpoint}")
 
 
         # Now run server
