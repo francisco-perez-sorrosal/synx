@@ -59,6 +59,8 @@ class FixFastMCP(FastMCP):
             )
         )
 
+        logger.warning(f"New Protected Resource Metadata endpoint: {starlette_app.router.routes}")
+
         # Now run server
         server = uvicorn.Server(config)
         await server.serve()
