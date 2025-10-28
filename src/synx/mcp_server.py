@@ -78,7 +78,7 @@ def create_mcp_server(host: str, port: int, auth_config: AuthConfig | None) -> F
     token_verifier = None
     if auth_config is not None:
         auth_settings = AuthSettings(
-            issuer_url=this_mcp_server_url,
+            issuer_url=auth_config.auth_server_url,
             required_scopes=[auth_config.mcp_scope],
             resource_server_url=this_mcp_server_url,
         )
