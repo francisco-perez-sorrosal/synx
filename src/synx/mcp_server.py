@@ -55,10 +55,9 @@ class FixFastMCP(FastMCP):
             authorization_servers=[self.settings.auth.issuer_url],
             scopes_supported=self.settings.auth.required_scopes,
         )
-    
         
         logger.warning(f"Adding new Protected Resource Metadata JSON endpoint: {protected_resource_metadata}")
-        starlette_app.router.routes.append(Route("/.well-known/oauth-protected-resource", endpoint=protected_resource_metadata.handle, methods=["GET", "OPTIONS"]))
+        starlette_app.router.routes.append(Route("/.well-known/oauth-protected-resource", endpoint=cors_middleware(ProtectedResourceMetadataHandler(protected_resource_metadata).handle, ["GET", "OPTIONS"]), methods=["GET", "OPTIONS"]))
 
         for route in starlette_app.router.routes:
             logger.warning(f"Route after addition: {route.path}\n\t{str(route.endpoint)}")
@@ -97,7 +96,7 @@ def create_mcp_server(host: str, port: int, auth_config: AuthConfig | None) -> F
 
     logger.info(f"MCP host/port: {mcp_host}/{mcp_port}")
     # Configure FastMCP with proper settings for streamable HTTP
-    return FixFastMCP(
+    return FastMCP(
         "synx",
         host=mcp_host,
         port=mcp_port,
