@@ -6,7 +6,6 @@ import os
 from mcp.server.fastmcp import Context, FastMCP
 from mcp.server.auth.settings import AuthSettings
 from pydantic import AnyHttpUrl
-from starlette.responses import JSONResponse
 
 from synx.auth.token_verifier import SimpleTokenVerifier
 from synx.auth_config import AuthConfig
@@ -69,14 +68,8 @@ class FixFastMCP(FastMCP):
                 "bearer_methods_supported": ["header"]
             })
         
-        logger.warning(f"Adding new Protected Resource Metadata endpoint: {protected_resource_metadata}")
-        starlette_app.router.routes.append(
-            Route(
-                "/.well-known/oauth-protected-resource",
-                endpoint=custom_well_known_endpoint,
-                methods=["GET", "OPTIONS"],
-            )
-        )
+        logger.warning(f"Adding new Protected Resource Metadata JSON endpoint: {custom_well_known_endpoint}")
+        starlette_app.router.routes.append(Route("/.well-known/oauth-protected-resource", endpoint=custom_well_known_endpoint, methods=["GET", "OPTIONS"]))
 
         for route in starlette_app.router.routes:
             logger.warning(f"Route after addition: {route.path}\n\t{route.endpoint}")
