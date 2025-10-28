@@ -34,7 +34,7 @@ class FixFastMCP(FastMCP):
         
         
         logger.warning(f"type of starlette_app.router.routes: {type(starlette_app.router.routes)}")
-        logger.warning(f"type of starlette_app.router.routes[0]: {type(starlette_app.router.routes[0])}"
+        logger.warning(f"type of starlette_app.router.routes[0]: {type(starlette_app.router.routes[0])}")
         logger.warning(f"type of starlette_app.router.routes[0].endpoint: {type(starlette_app.router.routes[0].endpoint)}")
         for route in starlette_app.router.routes:
             logger.warning(f"Route before removal: {route.path}\n\t{str(route.endpoint)}")
