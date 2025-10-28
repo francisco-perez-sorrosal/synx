@@ -31,7 +31,10 @@ class FixFastMCP(FastMCP):
             port=self.settings.port,
             log_level=self.settings.log_level.lower(),
         )
-        logger.warning(f"Previous Protected Resource Metadata endpoint: {starlette_app.router.routes}")
+        
+        for route in starlette_app.router.routes:
+            logger.warning(f"Route before removal: {route.path}")
+        
 
         # Remove existing Protected Resource Metadata endpoint (resource="http://localhost:8000/")
         logger.warning(f"Removing existing Protected Resource Metadata endpoint: {starlette_app.router.routes}")
@@ -60,7 +63,9 @@ class FixFastMCP(FastMCP):
             )
         )
 
-        logger.warning(f"New Protected Resource Metadata endpoint: {starlette_app.router.routes}")
+        for route in starlette_app.router.routes:
+            logger.warning(f"Route after addition: {route.path}")
+
 
         # Now run server
         server = uvicorn.Server(config)
