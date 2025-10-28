@@ -16,6 +16,54 @@ from synx.logger import get_logger
 logger = get_logger()
 
 
+class FixFastMCP(FastMCP):
+    # TODO: This is a hack to fix the FastMCP class to work with OAuth 2.0 Protected Resource Metadata. Remove this once the FastMCP class is fixed.
+
+    async def run_streamable_http_async(self) -> None:
+        """Run the server using StreamableHTTP transport."""
+        import uvicorn
+
+        starlette_app = self.streamable_http_app()
+
+        config = uvicorn.Config(
+            starlette_app,
+            host=self.settings.host,
+            port=self.settings.port,
+            log_level=self.settings.log_level.lower(),
+        )
+
+        # Remove existing Protected Resource Metadata endpoint (resource="http://localhost:8000/")
+        logger.warning(f"Removing existing Protected Resource Metadata endpoint: {starlette_app.router.routes}")
+        starlette_app.router.routes = list(filter(lambda r: r.path != "/.well-known/oauth-protected-resource", starlette_app.router.routes))
+
+        # Add OAuth 2.0 Protected Resource Metadata endpoint as per RFC 9728 (resource="http://localhost:8000/mcp")
+        from mcp.server.auth.handlers.metadata import ProtectedResourceMetadataHandler
+        from mcp.server.auth.routes import cors_middleware
+        from mcp.shared.auth import ProtectedResourceMetadata
+        from starlette.routing import Route
+
+        protected_resource_metadata = ProtectedResourceMetadata(
+            resource=AnyHttpUrl(str(self.settings.auth.resource_server_url)+"mcp"), # Real fix
+            authorization_servers=[self.settings.auth.issuer_url],
+            scopes_supported=self.settings.auth.required_scopes,
+        )
+        logger.warning(f"Adding new Protected Resource Metadata endpoint: {protected_resource_metadata}")
+        starlette_app.router.routes.append(
+            Route(
+                "/.well-known/oauth-protected-resource",
+                endpoint=cors_middleware(
+                    ProtectedResourceMetadataHandler(protected_resource_metadata).handle,
+                    ["GET", "OPTIONS"],
+                ),
+                methods=["GET", "OPTIONS"],
+            )
+        )
+
+        # Now run server
+        server = uvicorn.Server(config)
+        await server.serve()
+        
+
 def create_mcp_server(host: str, port: int, auth_config: AuthConfig | None) -> FastMCP:
     # Load host/port from environment at module level
     mcp_host = os.getenv("HOST", host)
@@ -44,7 +92,7 @@ def create_mcp_server(host: str, port: int, auth_config: AuthConfig | None) -> F
 
     logger.info(f"MCP host/port: {mcp_host}/{mcp_port}")
     # Configure FastMCP with proper settings for streamable HTTP
-    return FastMCP(
+    return FixFastMCP(
         "synx",
         host=mcp_host,
         port=mcp_port,
