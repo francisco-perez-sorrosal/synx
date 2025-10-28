@@ -9,7 +9,7 @@ class AuthConfig(BaseSettings):
     """Settings for the MCP Resource Server."""
 
     # Authorization Server settings
-    auth_server_url: str = f"{os.getenv('AUTH_SERVER_URL', 'http://localhost:9000')}/login"
+    auth_server_url: str = f"{os.getenv('AUTH_SERVER_URL', 'http://localhost:9000')}"
     auth_server_introspection_endpoint: str = f"{os.getenv('AUTH_SERVER_URL', 'http://localhost:9000')}/introspect"
     # No user endpoint needed - we get user data from token introspection
 

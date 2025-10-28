@@ -205,7 +205,7 @@ RESOURCE_SERVER_URL=https://synx-francisco-perez-sorrosal.wasmer.app
 
 Lauch MCP inspector with:
 ```shell
-DANGEROUSLY_OMIT_AUTH=false npx @modelcontextprotocol/inspector
+npx @modelcontextprotocol/inspector
 ```
 
 Locally, setup SREAMABLE_HTTP as protocol:
