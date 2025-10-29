@@ -22,6 +22,9 @@ class SimpleTokenVerifier(TokenVerifier):
         server_url: str,
         oauth_strict: bool = False,
     ):
+        logger.warning(f"Initializing SimpleTokenVerifier with introspection endpoint: {introspection_endpoint}")
+        logger.warning(f"Initializing SimpleTokenVerifier with server url: {server_url}")
+        logger.warning(f"Initializing SimpleTokenVerifier with oauth strict: {oauth_strict}")
         self.introspection_endpoint = introspection_endpoint
         self.server_url = server_url
         self.oauth_strict = oauth_strict
@@ -58,6 +61,8 @@ class SimpleTokenVerifier(TokenVerifier):
                     return None
 
                 data = response.json()
+                
+                logger.warning(f"Token introspection data: {data}")
                 if not data.get("active", False):
                     logger.warning(f"Token introspection is not active")
                     return None
