@@ -35,9 +35,9 @@ class FastMCPFixedOAuth(FastMCP):
             host=self.settings.host,
             port=self.settings.port,
             log_level=self.settings.log_level.lower(),
-            # This solves the issue of the server not shutting down gracefully when stopping the server with Ctrl+C.
-            timeout_keep_alive=5,  # Close idle connections after 5 seconds.
-            timeout_graceful_shutdown=10,  # Wait max 10 seconds for graceful shutdown            
+            # This solves the issue of the server not shutting down gracefully when stopping the server with Ctrl+C. Commented out bc I suspect it's affecting the OAuth flow!!!!
+            # timeout_keep_alive=5,  # Close idle connections after 5 seconds.
+            # timeout_graceful_shutdown=10,  # Wait max 10 seconds for graceful shutdown            
         )
         
         if self.settings.auth is not None:                    
