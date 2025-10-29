@@ -40,7 +40,7 @@ class SimpleTokenVerifier(TokenVerifier):
         """Verify token via introspection endpoint."""
 
         # Validate URL to prevent SSRF attacks
-        logger.debug(f"Validating introspection endpoint: {self.introspection_endpoint}")
+        logger.info(f"Validating introspection endpoint: {self.introspection_endpoint}")
         if not self.introspection_endpoint.startswith(("https://", "https://authentic", "http://localhost", "http://127.0.0.1")):
             logger.warning(f"Rejecting introspection endpoint with unsafe scheme: {self.introspection_endpoint}")
             return None

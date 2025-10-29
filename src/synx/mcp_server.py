@@ -40,12 +40,16 @@ class FastMCPFixedOAuth(FastMCP):
             # timeout_graceful_shutdown=10,  # Wait max 10 seconds for graceful shutdown            
         )
         
-        if self.settings.auth is not None:                    
+        if self.settings.auth is not None:
+            logger.warning(f"--------------------------------")
             # Remove existing Protected Resource Metadata endpoint (resource="http://localhost:8000/")
             logger.warning(f"Removing existing Protected Resource Metadata endpoint: {starlette_app.router.routes}")
             starlette_app.router.routes = list(filter(lambda r: r.path != "/.well-known/oauth-protected-resource", starlette_app.router.routes))
 
             # Add OAuth 2.0 Protected Resource Metadata endpoint as per RFC 9728 (resource="http://localhost:8000/mcp")
+            logger.warning(f"resource_server_url: {self.settings.auth.resource_server_url}")
+            logger.warning(f"issuer_url: {self.settings.auth.issuer_url}")
+            logger.warning(f"required_scopes: {self.settings.auth.required_scopes}")
             protected_resource_metadata = ProtectedResourceMetadata(
                 resource=AnyHttpUrl(str(self.settings.auth.resource_server_url)+"mcp"), # Real fix
                 authorization_servers=[self.settings.auth.issuer_url],
@@ -54,7 +58,7 @@ class FastMCPFixedOAuth(FastMCP):
             
             logger.warning(f"Adding new Protected Resource Metadata JSON endpoint: {protected_resource_metadata}")
             starlette_app.router.routes.append(Route("/.well-known/oauth-protected-resource", endpoint=cors_middleware(ProtectedResourceMetadataHandler(protected_resource_metadata).handle, ["GET", "OPTIONS"]), methods=["GET", "OPTIONS"]))
-
+            logger.warning(f"--------------------------------")
         # New server with fixed OAuth
         server = uvicorn.Server(config)
         await server.serve()

@@ -175,7 +175,7 @@ Lauch MCP server:
 TRANSPORT=streamable-http AUTH_URL=http://localhost:9000 pixi run start --debug --use-auth 
 ```
 
-Lauch MCP inspector with:
+Lauch MCP inspector and run the URL it shows it in a browser in an incognito window with:
 ```shell
 DANGEROUSLY_OMIT_AUTH=false npx @modelcontextprotocol/inspector
 ```
@@ -203,7 +203,7 @@ AUTH_SERVER_URL=https://authentic.wasmer.app
 RESOURCE_SERVER_URL=https://synx-francisco-perez-sorrosal.wasmer.app
 ```
 
-Lauch MCP inspector with:
+Lauch MCP inspector and run the URL it shows it in a browser in an incognito window with:
 ```shell
 npx @modelcontextprotocol/inspector  # Without setting DANGEROUSLY_OMIT_AUTH env var
 ```
